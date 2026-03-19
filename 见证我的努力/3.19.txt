@@ -1,0 +1,4 @@
+1.力扣 72编辑距离 https://leetcode.cn/problems/edit-distance/description/
+2.六级备考：100单词，两篇翻译，一篇阅读
+3.算法设计与分析作业，复习算法设计与分析
+4.课设pta题目
