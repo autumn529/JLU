@@ -1,0 +1,5 @@
+Given a multimodal misinformation, it contains both news caption and news image. News caption is: [News caption]
+Determine if the news caption matches the content news image. You should answer in the following forms: 'Finish[MATCH].' or 'Finish[MISMATCH].'. Please follow the instructions bellow:
+IMAGE DESCRIPTION: [image content description]. 
+Draw the conclusion: Based on the [IMAGE DESCRIPTION] of the news image, does the news caption match the content of news image? If yes, please answer in the form: 'Finish[MATCH].'. If no, please answer in the form: 'Finish[MISMATCH].'.
+The answer is:

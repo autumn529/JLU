@@ -1,0 +1,4 @@
+According to the given news image, determine if the news image goes againes the objective facts? Please follow the instructions bellow:
+Thought 1: Please describe the content in the news image that goes against the objective fact.
+Observation: [Fact-conflicting Description]
+Action 1: Draw the conclusion based on the observation: if there is any credible objective fact refuting the news image, please answer in the form: 'Finish[IMAGE REFUTES].'. If no, please answer in the form: 'Finish[IMAGE SUPPORTS].'.
