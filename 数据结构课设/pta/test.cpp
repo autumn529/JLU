@@ -1,77 +1,105 @@
 #include<iostream>
-#include<vector>
-#include<algorithm>
+#include<stdlib.h>
+#include<math.h>
 using namespace std;
 
-int partition(vector<int>& arr,int m,int n)
-{
-    int K=arr[m],L=m+1,G=n;
-    while(L<=G)
-    {
-        while(L<=n&&arr[L]<K)
-            L++;
-        while(arr[G]>K)
-            G--;
-        if(L<G)
-        {
-            swap(arr[L],arr[G]);
-            L++;
-            G--;
-        }
-    }
-    swap(arr[m],arr[G]);
-    return G;
+struct AVLnode{
+    int key; //关键词
+    int height; //以该结点为根的子树高度
+    AVLnode *left, *right;
+    AVLnode(int K){ key=K; height=0; left=right=NULL; }
+};
+
+int Height(AVLnode *t){ return(t==NULL)?-1:t->height; }
+int max(int a, int b){ return (a>b)? a:b; }
+
+void UpdateHeight(AVLnode *t){
+t->height = max(Height(t->left),Height(t->right))+1;
 }
 
-void quicksort(vector<int>& arr,int m,int n)
+void LL(AVLnode* &A)
 {
-    if(m<n)
-    {
-        int k=partition(arr,m,n);
-        for(int i=0;i<arr.size();i++)
-            cout<<arr[i]<<" ";
-        cout<<endl;
-        quicksort(arr,m,k-1);
-        quicksort(arr,k+1,n);
-    }
+    AVLnode *B = A->left;
+    A->left = B->right;
+    B->right = A;
+    UpdateHeight(A);
+    UpdateHeight(B);
+    A = B;
 }
 
-void QuickSort(vector<int> &arr, int m, int n){
-    while(m < n)
+void RR(AVLnode* &A)
+{
+    AVLnode *B = A->right;
+    A->right = B->left;
+    B->left = A;
+    UpdateHeight(A);
+    UpdateHeight(B);
+    A = B;
+}
+
+void LR(AVLnode* &A){
+    RR(A->left);
+    LL(A);
+}
+
+void RL(AVLnode* &A){
+    LL(A->right);
+    RR(A);
+}
+
+void ReBalance(AVLnode* &t)
+{
+    if(t==NULL)
+        return;
+    if(Height(t->left) - Height(t->right)==2)
     {
-        int k=partition(arr,m,n);
-        for(int i=0;i<arr.size();i++)
-            cout<<arr[i]<<" ";
-        cout<<endl;
-        if(k-m < n-k)
-        { //左区间短
-            QuickSort(arr,m,k-1);
-            m=k+1;
-        }
+        if(Height(t->left->left) >= Height(t->left->right))
+            LL(t);
         else
-        { //右区间短
-            QuickSort(arr,k+1,n);
-            n=k-1;
-        }
+            LR(t);
     }
-}
-
-int main(void)
-{
-    vector<int> arr;
-    int n;
-    cin>>n;
-    for(int i=0;i<n;i++)
+    else if(Height(t->right) - Height(t->left)==2)
     {
-        int x;
-        cin>>x;
-        arr.push_back(x);
+        if(Height(t->right->right) >= Height(t->right->left))
+            RR(t);
+        else
+            RL(t);
     }
-
-    QuickSort(arr,0,n-1);
-    for(int i=0;i<arr.size();i++)
-        cout<<arr[i]<<" ";
-    return 0;
+    UpdateHeight(t);
 }
 
+void remove(AVLnode* &root, int K)
+{
+    if(root==NULL) 
+        return;
+    if(K<root->key) 
+        remove(root->left, K); //在左子树删K
+    else if(K>root->key)
+        remove(root->right, K); //在右子树删K
+    else if(root->left!=NULL && root->right!=NULL)
+    {
+        AVLnode *s=root->right;
+        while(s->left!=NULL)
+            s=s->left;
+        root->key=s->key; //s为t右子树中根序列第一个结点
+        remove(root->right, s->key);
+    }
+    else
+    {
+        AVLnode* oldroot=root;
+        root=(root->left!=NULL)? root->left:root->right;
+        delete oldroot;
+    }
+    ReBalance(root);
+}
 
+void Insert(AVLnode* &root, int K)
+{
+    if(root==nullptr) 
+        root=new AVLnode(K);
+    else if(K < root->key) //在左子树插入
+        Insert(root->left, K);
+    else if(K > root->key) //在右子树插入
+        Insert(root->right, K);
+    ReBalance(root);
+}
